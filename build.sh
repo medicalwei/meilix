@@ -61,6 +61,9 @@ sudo mount --rbind /dev chroot/dev
 sudo mount -t proc none chroot/proc
 
 # Work *inside* the chroot
+
+echo "$MEILIX_GENERATOR_SCRIPT" > chroot/meilix-generator.sh
+
 sudo chroot chroot <<EOF
 # Set up several useful shell variables
 export CASPER_GENERATE_UUID=1
@@ -172,6 +175,12 @@ dpkg -i --force-overwrite meilix-default-settings_1.0_all.deb
 dpkg -i --force-overwrite systemlock_0.1-1_all.deb
 apt-get install -f
 apt-get -q -y remove dconf-tools
+
+# execute environment variable
+chmod +x meilix-generator.sh
+./meilix-generator.sh
+rm meilix-generator.sh
+
 # Clean up the chroot before
 perl -i -nle 'print unless /^Package: language-(pack|support)/ .. /^$/;' /var/lib/apt/extended_states
 apt-get clean
@@ -184,6 +193,7 @@ rm meilix-imclient_*_all.deb
 # Reverting earlier initctl override. JM 2012-0604
 rm /sbin/initctl
 dpkg-divert --rename --remove /sbin/initctl
+
 
 exit
 EOF
