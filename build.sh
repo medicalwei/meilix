@@ -192,9 +192,9 @@ EOF
 # Continue work outside the chroot, preparing image
 
 # Unmount pseudo-filesystems
-sudo umount chroot/proc
-sudo umount chroot/sys
-sudo umount chroot/dev
+sudo umount -l chroot/proc
+sudo umount -l chroot/sys
+sudo umount -l chroot/dev
 
 echo $0: Preparing image...
 
